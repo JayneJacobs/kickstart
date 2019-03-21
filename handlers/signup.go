@@ -130,6 +130,7 @@ func SignUpHandler(e *common.Env) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		s := SignUpForm{}
+		//FieldNames controls prefill of fields
 		s.FieldNames = []string{"username", "firstName", "lastName", "email"}
 		s.Fields = make(map[string]string)
 		s.Errors = make(map[string]string)

@@ -23,6 +23,11 @@ vi ~/.bash_profile
 
 ```
 export KICKSTART_APP_ROOT=${GOPATH}/src/github.com/JayneJacobs/FullStackWebDev/kickstart/
-```
 
-kick --appPath=$KICKSTART_APP_ROOT --gopherjsAppPath=$KICKSTART_APP_ROOT/client --mainSourceFile=gopherface.go
+Other Variables to export
+KICKSTART_HASH_KEY="CRKVBJs0kfyeQ9Y1"
+export KICKSTART_BLOCK_KEY="CRKVBJs0kfyeQ9Y1"
+```
+```
+kick --appPath=$KICKSTART_APP_ROOT --gopherjsAppPath=$KICKSTART_APP_ROOT/client --mainSourceFile=kickstart.go
+```
