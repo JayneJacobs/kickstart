@@ -114,7 +114,7 @@ func ProcessSignUpForm(w http.ResponseWriter, r *http.Request, s *SignUpForm, e 
 		log.Print(err)
 	}
 
-	user, err := e.DB.GetUser("EngineerKamesh")
+	user, err := e.DB.GetUser("JayneJacobs")
 	if err != nil {
 		log.Print(err)
 	} else {
