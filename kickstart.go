@@ -1,13 +1,13 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"os"
 
 	"go.isomorphicgo.org/go/isokit"
 
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/common"
+	"github.com/JayneJacobs/FullStackWebDev/kickstart/common/asyncq"
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/common/datastore"
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/handlers"
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/middleware"
@@ -21,13 +21,14 @@ import (
 
 const (
 	WEBSERVERPORT = ":8443"
+	//WEBSERVERPORT = ":8080"
 )
 
 var WebAppRoot = os.Getenv("KICKSTART_APP_ROOT")
 
 func main() {
 
-	//asyncq.StartTaskDispatcher(9)
+	asyncq.StartTaskDispatcher(9)
 
 	db, err := datastore.NewDatastore(datastore.MYSQL, "gopherface:gopherface@/gopherfacedb")
 	//db, err := datastore.NewDatastore(datastore.MONGODB, "localhost:27017")
@@ -59,6 +60,7 @@ func main() {
 	r.Handle("/friends", middleware.GatedContentHandler(handlers.FriendsHandler(&env))).Methods("GET")
 	r.Handle("/profile", middleware.GatedContentHandler(handlers.MyProfileHandler(&env))).Methods("GET")
 	r.Handle("/find", middleware.GatedContentHandler(handlers.FindHandler)).Methods("GET,POST")
+
 	r.Handle("/profile/{username}", middleware.GatedContentHandler(handlers.ProfileHandler)).Methods("GET")
 	r.Handle("/postpreview", middleware.GatedContentHandler(handlers.PostPreviewHandler)).Methods("GET", "POST")
 	r.Handle("/upload-image", middleware.GatedContentHandler(handlers.UploadImageHandler)).Methods("GET", "POST")
@@ -70,7 +72,7 @@ func main() {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(WebAppRoot+"/static"))))
 
 	//HandleFunc is a simple handler not using Gorilla Mux
-	http.HandleFunc("/hello-guest", helloGuestHandler)
+	http.HandleFunc("/hello-guest", handlers.HelloGuestHandler)
 
 	loggedRouter := ghandlers.LoggingHandler(os.Stdout, r)
 	stdChain := alice.New(middleware.PanicRecoveryHandler)
@@ -81,30 +83,4 @@ func main() {
 		log.Fatal("ListenAndServe: ", err)
 	}
 
-}
-
-type Guest struct {
-	Name string
-}
-
-// Handler for the hello-gopher route
-func helloGuestHandler(w http.ResponseWriter, r *http.Request) {
-
-	var guestname string
-	guestname = r.URL.Query().Get("guestname")
-	if guestname == "" {
-		guestname = "Jayne"
-	}
-	guest := Guest{Name: guestname}
-	renderTemplate(w, "./templates/greeting.html", guest)
-
-}
-
-// Template rendering function
-func renderTemplate(w http.ResponseWriter, templateFile string, templateData interface{}) {
-	t, err := template.ParseFiles(templateFile)
-	if err != nil {
-		log.Fatal("Error encountered while parsing the template: ", err)
-	}
-	t.Execute(w, templateData)
 }

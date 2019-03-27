@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	
 
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/common/asyncq"
 	"github.com/JayneJacobs/FullStackWebDev/kickstart/common/utility"
@@ -39,7 +40,7 @@ func ProcessUploadImage(w http.ResponseWriter, r *http.Request, u *UploadImageFo
 	if fileheader != nil {
 
 		extension := filepath.Ext(fileheader.Filename)
-		r.ParseMultipartForm(32 << 20)
+		r.ParseMultipartForm(59 << 20)
 
 		defer file.Close()
 
