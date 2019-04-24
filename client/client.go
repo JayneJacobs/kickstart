@@ -11,6 +11,7 @@ import (
 	"honnef.co/go/js/dom"
 )
 
+// D is a shortcut for the dom functions
 var D = dom.GetWindow().Document().(dom.HTMLDocument)
 
 func initializeEventHandlers(env *common.Env) {
